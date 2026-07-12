@@ -1,0 +1,12 @@
+{
+  "name": "MK Gift Shop",
+  "short_name": "MK Gift Shop",
+  "description": "Premium curated gifts for every occasion.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0d0d1a",
+  "theme_color": "#0d0d1a",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

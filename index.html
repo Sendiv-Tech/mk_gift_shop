@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MK Gift Shop – Premium Gifts for Every Moment</title>
+<meta name="description" content="MK Gift Shop offers curated, premium gift collections for birthdays, weddings, festivals, and every special occasion. Shop hampers, candles, and more — delivered with love.">
+<meta name="theme-color" content="#0d0d1a">
+
+<!-- App-like install support (Add to Home Screen) -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-512.png" type="image/png">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MK Gift Shop">
+
+<!-- Open Graph -->
+<meta property="og:title" content="MK Gift Shop – Premium Gifts for Every Moment">
+<meta property="og:description" content="Curated gifts that speak the words your heart can't say.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Skip link for keyboard/screen-reader users -->
+<a class="skip-link" href="#main-content" style="position:absolute;left:-9999px;top:auto;">Skip to main content</a>
+
+<!-- LIQUID BACKGROUND -->
+<canvas id="liquid-bg" aria-hidden="true"></canvas>
+
+<!-- NOTIFICATION -->
+<div id="notification" role="status" aria-live="polite"></div>
+
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav id="navbar" aria-label="Main navigation">
+  <a class="nav-logo" href="#page-home" onclick="closeMenu()">
+    <img src="icons/icon-512.png" alt="MK Gift Centre" class="nav-logo-img" width="44" height="44">
+    <span class="nav-logo-text">MK Gift Centre</span>
+  </a>
+  <button class="hamburger" onclick="toggleMenu()" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#page-home" onclick="closeMenu()" class="active" data-page="home">Home</a></li>
+    <li><a href="#page-offerings" onclick="closeMenu()" data-page="offerings">Offerings</a></li>
+    <li><a href="#page-categories" onclick="closeMenu()" data-page="categories">Categories</a></li>
+    <li><a href="#page-products" onclick="closeMenu()" data-page="products">Products</a></li>
+    <li><a href="#page-reviews" onclick="closeMenu()" data-page="reviews">Reviews</a></li>
+    <li><a href="#page-contact" onclick="closeMenu()" data-page="contact">Contact</a></li>
+    <li><a href="#" onclick="openAdminLogin();return false;" class="nav-admin-btn">⚙ Admin</a></li>
+  </ul>
+</nav>
+
+<main id="main-content">
+
+<!-- ============================================================
+     PAGE: HOME
+     ============================================================ -->
+<div id="page-home" class="site-section">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow"><span aria-hidden="true"></span> Premium Gift Shop Since 2018</div>
+      <h1 class="hero-title">
+        Perfect Gifts<br><span class="gradient-text">for Every</span><br>Moment
+      </h1>
+      <p class="hero-subtitle">Where emotion meets elegance. Curated gifts that speak the words your heart can't say — crafted for birthdays, love, celebrations, and every moment worth remembering.</p>
+      <div class="hero-cta">
+        <button class="btn btn-gold" onclick="scrollToSection('products')">✨ Shop Now</button>
+        <button class="btn btn-outline" onclick="scrollToSection('categories')">Explore Gifts</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-num">5K+</div><div class="hero-stat-label">Happy Customers</div></div>
+        <div><div class="hero-stat-num">200+</div><div class="hero-stat-label">Gift Collections</div></div>
+        <div><div class="hero-stat-num">4.9★</div><div class="hero-stat-label">Customer Rating</div></div>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="gift-float" style="top:20%;left:20%">🎁</div>
+      <div class="gift-float" style="top:55%;left:55%">💝</div>
+      <div class="gift-float" style="top:35%;left:65%">🎀</div>
+    </div>
+  </section>
+
+  <!-- REVIEWS STRIP -->
+  <section class="reviews-strip" style="position:relative;z-index:2">
+    <div class="section" style="padding-top:20px">
+      <span class="section-tag" style="display:block;text-align:center">What our customers say</span>
+      <h2 class="section-title" style="text-align:center">Heartfelt Stories</h2>
+      <div class="reviews-grid" id="home-reviews"></div>
+      <div style="text-align:center;margin-top:36px">
+        <button class="btn btn-outline" onclick="scrollToSection('reviews')">Read All Reviews</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================================================
+     PAGE: OFFERINGS (full-height auto-sliding banner)
+     ============================================================ -->
+<div id="page-offerings" class="site-section">
+  <section class="offer-slider" id="offer-slider" aria-roledescription="carousel" aria-label="Special offers">
+    <div class="offer-slider-intro">
+      <span class="section-tag">Exclusive Deals</span>
+      <h2 class="section-title">Special <span class="gradient-text">Offers</span></h2>
+      <p class="section-subtitle" style="margin-bottom:0">Handpicked deals updated regularly — grab yours before they're gone.</p>
+    </div>
+
+    <div class="offer-slider-track" id="offer-slider-track"></div>
+
+    <div class="offer-slider-controls">
+      <button type="button" class="offer-slider-arrow" id="offer-prev" aria-label="Previous slide">‹</button>
+      <div class="offer-slider-dots" id="offer-slider-dots" role="tablist" aria-label="Slide navigation"></div>
+      <button type="button" class="offer-slider-arrow" id="offer-next" aria-label="Next slide">›</button>
+    </div>
+  </section>
+</div>
+
+<!-- ============================================================
+     PAGE: CATEGORIES
+     ============================================================ -->
+<div id="page-categories" class="site-section">
+  <div class="section">
+    <span class="section-tag">Browse By Occasion</span>
+    <h2 class="section-title">Gift <span class="gradient-text">Categories</span></h2>
+    <p class="section-subtitle">Every moment has a gift waiting. Find yours below.</p>
+    <div class="divider"></div>
+    <div class="categories-grid" id="categories-grid"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: PRODUCTS
+     ============================================================ -->
+<div id="page-products" class="site-section">
+  <div class="section">
+    <span class="section-tag">Our Collection</span>
+    <h2 class="section-title">Premium <span class="gradient-text">Products</span></h2>
+    <p class="section-subtitle">Every gift tells a story. Find the perfect one.</p>
+    <div class="divider"></div>
+
+    <!-- Best Sellers -->
+    <div class="best-sellers">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:20px;color:var(--gold)">⭐ Best Sellers</h3>
+      <div class="best-sellers-scroll" id="best-sellers"></div>
+    </div>
+
+    <div class="products-layout" id="products-layout">
+      <!-- Products grid -->
+      <div>
+        <span id="products-count" style="display:block;font-size:0.85rem;color:var(--text-muted);margin-bottom:20px" role="status"></span>
+        <div class="products-grid" id="products-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: REVIEWS
+     ============================================================ -->
+<div id="page-reviews" class="site-section">
+  <div class="section">
+    <span class="section-tag">Customer Stories</span>
+    <h2 class="section-title">Share Your <span class="gradient-text">Experience</span></h2>
+    <p class="section-subtitle">Your words inspire others to gift with love.</p>
+    <div class="divider"></div>
+
+    <div class="review-form-wrap">
+      <div class="glass-card">
+        <h3 class="form-title">Write a Review</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="rev-name">Your Name</label>
+            <input type="text" class="form-input" id="rev-name" placeholder="e.g. Priya S.">
+          </div>
+          <div class="form-group">
+            <label for="rev-product">Product Purchased</label>
+            <input type="text" class="form-input" id="rev-product" placeholder="e.g. Rose Gift Box">
+          </div>
+        </div>
+        <div class="form-group">
+          <span id="rating-label">Your Rating</span>
+          <div class="star-picker" id="star-picker" role="group" aria-labelledby="rating-label">
+            <button type="button" onclick="setRating(1)" data-val="1" aria-label="1 star" aria-pressed="false">☆</button>
+            <button type="button" onclick="setRating(2)" data-val="2" aria-label="2 stars" aria-pressed="false">☆</button>
+            <button type="button" onclick="setRating(3)" data-val="3" aria-label="3 stars" aria-pressed="false">☆</button>
+            <button type="button" onclick="setRating(4)" data-val="4" aria-label="4 stars" aria-pressed="false">☆</button>
+            <button type="button" onclick="setRating(5)" data-val="5" aria-label="5 stars" aria-pressed="false">☆</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="rev-text">Your Review</label>
+          <textarea class="form-textarea" id="rev-text" placeholder="Tell us about your gifting experience..."></textarea>
+        </div>
+        <button class="btn btn-gold" onclick="submitReview()" style="width:100%;justify-content:center">💌 Submit Review</button>
+      </div>
+    </div>
+
+    <div class="reviews-list-grid" id="reviews-list"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: CONTACT
+     ============================================================ -->
+<div id="page-contact" class="site-section">
+  <div class="section">
+    <span class="section-tag">Get In Touch</span>
+    <h2 class="section-title">We'd Love to <span class="gradient-text">Hear From You</span></h2>
+    <div class="divider"></div>
+    <div class="contact-layout">
+      <div class="contact-info-card glass-card">
+        <div class="contact-info-title">MK Gift Shop</div>
+        <p class="contact-tagline">Where every gift is a memory waiting to be made.</p>
+        <div class="contact-item">
+          <div class="contact-icon" aria-hidden="true">📞</div>
+          <div><div class="contact-label">Phone</div><div class="contact-value"><a href="tel:+916383204742" style="color:inherit;text-decoration:none">+91 63832 04742</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon" aria-hidden="true">✉️</div>
+          <div><div class="contact-label">Email</div><div class="contact-value"><a href="mailto:hello@mkgiftshop.com" style="color:inherit;text-decoration:none">hello@mkgiftshop.com</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon" aria-hidden="true">📍</div>
+          <div><div class="contact-label">Location</div><div class="contact-value">Azath Street, Madurai Rd, Thiruppathur - 630211<br>Tamil Nadu (4H6V+VX Tirupattur)</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon" aria-hidden="true">📷</div>
+          <div><div class="contact-label">Instagram</div><div class="contact-value"><a href="https://www.instagram.com/mk_gift_centre?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none">@mk_gift_centre</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon" aria-hidden="true">🕐</div>
+          <div><div class="contact-label">Working Hours</div><div class="contact-value">Mon–Sat: 10 AM – 8 PM<br>Sunday: 11 AM – 6 PM</div></div>
+        </div>
+        <div style="margin-top:28px">
+          <button class="btn btn-wine" onclick="openWhatsApp('Hi! I have a query about MK Gift Shop.')">💬 Chat on WhatsApp</button>
+        </div>
+      </div>
+      <div class="contact-form-card glass-card">
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:24px">Send a Message</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ct-name">Name</label>
+            <input type="text" class="form-input" id="ct-name" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label for="ct-phone">Phone</label>
+            <input type="tel" class="form-input" id="ct-phone" placeholder="+91 00000 00000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ct-email">Email</label>
+          <input type="email" class="form-input" id="ct-email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label for="ct-subject">Subject</label>
+          <input type="text" class="form-input" id="ct-subject" placeholder="How can we help?">
+        </div>
+        <div class="form-group">
+          <label for="ct-msg">Message</label>
+          <textarea class="form-textarea" id="ct-msg" placeholder="Tell us more..." style="min-height:130px"></textarea>
+        </div>
+        <button class="btn btn-gold form-submit" onclick="submitContact()" style="justify-content:center">Send Message →</button>
+      </div>
+    </div>
+    <div class="glass-card" style="margin-top:32px;padding:12px;overflow:hidden">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7855.681019220909!2d78.594969!3d10.112138!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b008b4e965971e7%3A0xcb28dca7f453e228!2sMk_gift_centre!5e0!3m2!1sen!2sin!4v1783748217240!5m2!1sen!2sin" width="100%" height="380" style="border:0;border-radius:12px;display:block" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="MK Gift Centre location on Google Maps"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: ADMIN
+     ============================================================ -->
+<div id="page-admin" class="admin-overlay">
+  <div class="admin-topbar">
+    <div class="admin-topbar-title"><span class="admin-topbar-logo">MK</span> Admin Panel</div>
+    <button class="btn btn-outline" onclick="logoutAdmin()">← Back to Shop</button>
+  </div>
+  <div class="admin-container">
+    <div class="admin-tabs" role="tablist" aria-label="Admin sections">
+      <button type="button" class="admin-tab active" onclick="switchAdmin('overview')" data-admin="overview">📊 Dashboard</button>
+      <button type="button" class="admin-tab" onclick="switchAdmin('products')" data-admin="products">🎁 Products</button>
+      <button type="button" class="admin-tab" onclick="openProductModal()" data-admin="add">➕ Add Product</button>
+      <button type="button" class="admin-tab" onclick="switchAdmin('analytics')" data-admin="analytics">📈 Analytics</button>
+      <button type="button" class="admin-tab" onclick="switchAdmin('offers')" data-admin="offers">🎯 Offers</button>
+      <button type="button" class="admin-tab" onclick="switchAdmin('finance')" data-admin="finance">💰 Finance</button>
+      <button type="button" class="admin-tab" onclick="switchAdmin('reviews')" data-admin="reviews">⭐ Reviews</button>
+      <button type="button" class="admin-tab" onclick="switchAdmin('settings')" data-admin="settings">⚙️ Settings</button>
+    </div>
+
+    <div class="admin-panels">
+
+      <!-- OVERVIEW -->
+      <div class="admin-panel active" id="admin-overview">
+        <div class="admin-page-title">Dashboard Overview</div>
+        <div class="admin-page-sub">Welcome back, Admin · Last updated just now</div>
+        <div class="stats-grid">
+          <div class="stat-card glass-card">
+            <div class="stat-icon" aria-hidden="true">🎁</div>
+            <div class="stat-value" id="stat-products">—</div>
+            <div class="stat-label">Total Products</div>
+            <div class="stat-change stat-up">↑ 3 this week</div>
+          </div>
+          <div class="stat-card glass-card">
+            <div class="stat-icon" aria-hidden="true">🎯</div>
+            <div class="stat-value" id="stat-offers">—</div>
+            <div class="stat-label">Active Offers</div>
+            <div class="stat-change stat-up">↑ 1 new</div>
+          </div>
+          <div class="stat-card glass-card">
+            <div class="stat-icon" aria-hidden="true">⭐</div>
+            <div class="stat-value" id="stat-reviews">—</div>
+            <div class="stat-label">Customer Reviews</div>
+            <div class="stat-change stat-up">↑ 4.9 avg</div>
+          </div>
+          <div class="stat-card glass-card">
+            <div class="stat-icon" aria-hidden="true">📦</div>
+            <div class="stat-value" id="stat-instock">—</div>
+            <div class="stat-label">In Stock Items</div>
+            <div class="stat-change stat-down">↓ 2 low stock</div>
+          </div>
+        </div>
+        <!-- Quick chart -->
+        <div class="glass-card" style="padding:24px;margin-bottom:24px">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px">Sales by Category</h3>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:16px">Based on current product mix</div>
+          <div class="chart-container" id="overview-chart"></div>
+        </div>
+        <!-- Low stock warning -->
+        <div class="glass-card" style="padding:24px;border-color:rgba(220,53,69,0.3)">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:16px;color:#f07080">⚠ Stock Alerts</h3>
+          <div id="stock-alerts"></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS ADMIN -->
+      <div class="admin-panel" id="admin-products">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+          <div><div class="admin-page-title">Product Management</div><div class="admin-page-sub">Add, edit, and manage your gift inventory</div></div>
+          <button class="btn btn-gold" onclick="openProductModal()">+ Add Product</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th scope="col">Code</th><th scope="col">Name</th><th scope="col">Category</th><th scope="col">Price</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead>
+            <tbody id="admin-products-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADD / EDIT PRODUCT -->
+      <div class="admin-panel" id="admin-add">
+        <div class="admin-page-title" id="product-modal-title">Add New Product</div>
+        <div class="admin-page-sub">Fill in the details below to add a new gift to your catalogue</div>
+        <div class="glass-card" style="padding:32px;max-width:760px">
+          <div class="admin-form-grid">
+            <div class="admin-form-group"><label for="p-name">Product Name</label><input type="text" class="form-input" id="p-name" placeholder="e.g. Rose Gift Box"></div>
+            <div class="admin-form-group"><label for="p-price">Price (₹)</label><input type="number" class="form-input" id="p-price" placeholder="0"></div>
+            <div class="admin-form-group"><label for="p-cat">Category</label>
+              <select class="admin-select" id="p-cat">
+                <option>Birthday</option><option>Love &amp; Romance</option><option>Wedding</option><option>Friendship</option><option>Baby Shower</option><option>Festival</option><option>Corporate</option><option>Kids</option>
+              </select>
+            </div>
+            <div class="admin-form-group"><label for="p-stock">Stock Status</label>
+              <select class="admin-select" id="p-stock">
+                <option value="in">In Stock</option><option value="out">Out of Stock</option><option value="sold">Sold Out</option>
+              </select>
+            </div>
+            <div class="admin-form-group"><label for="p-image">Product Image</label>
+              <input type="file" class="form-input" id="p-image" accept="image/*" onchange="handleProductImageUpload(event)">
+              <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+                <div id="p-image-preview" style="width:56px;height:56px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0" aria-hidden="true">🎁</div>
+                <span style="font-size:0.78rem;color:var(--text-muted)">JPG or PNG, recommended square image</span>
+              </div>
+              <input type="hidden" id="p-image-data" value="">
+            </div>
+            <div class="admin-form-group"><label for="p-discount">Discount (%)</label><input type="number" class="form-input" id="p-discount" placeholder="0" min="0" max="99"></div>
+            <div class="admin-form-group"><label for="p-original">Original Price (₹)</label><input type="number" class="form-input" id="p-original" placeholder="0"></div>
+            <div class="admin-form-group"><label for="p-badge">Badge</label>
+              <select class="admin-select" id="p-badge">
+                <option value="">None</option><option value="bestseller">Best Seller</option><option value="discount">Discount</option><option value="new">New</option><option value="combo">Combo</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-form-group" style="margin-top:12px;flex-direction:row;align-items:center;gap:10px">
+            <input type="checkbox" id="p-bestseller" style="accent-color:var(--gold);width:auto">
+            <label for="p-bestseller" style="text-transform:none;font-size:0.88rem;letter-spacing:0;color:var(--text-secondary)">Mark as Best Seller</label>
+          </div>
+          <div style="margin-top:20px;padding:12px 16px;background:rgba(201,168,76,0.06);border-radius:8px;border:1px solid rgba(201,168,76,0.2)">
+            <div style="font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted)">Auto Product Code</div>
+            <div class="admin-code-preview" id="p-code-preview">—</div>
+          </div>
+          <input type="hidden" id="p-edit-id" value="">
+          <div style="display:flex;gap:12px;margin-top:24px">
+            <button class="btn btn-gold" onclick="saveProduct()" style="flex:1;justify-content:center">Save Product</button>
+            <button class="btn btn-outline" onclick="closeProductModal()" style="justify-content:center">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- OFFERS ADMIN -->
+      <div class="admin-panel" id="admin-offers">
+        <div class="admin-page-title">Offer Management</div>
+        <div class="admin-page-sub">Create and manage promotional offers — these appear in the auto-scrolling banner on the homepage</div>
+
+        <div class="glass-card" style="padding:28px;margin-bottom:28px;max-width:760px">
+          <h3 id="offer-modal-title" style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:20px">Add New Offer</h3>
+          <div class="form-group"><label for="o-title">Offer Title</label><input type="text" class="form-input" id="o-title" placeholder="e.g. Valentine's Special"></div>
+          <div class="form-group"><label for="o-desc">Description</label><textarea class="form-textarea" id="o-desc" placeholder="What's included in this offer..."></textarea></div>
+          <div class="admin-form-grid">
+            <div class="admin-form-group"><label for="o-discount">Discount (%)</label><input type="number" class="form-input" id="o-discount" placeholder="20"></div>
+            <div class="admin-form-group"><label for="o-tag">Category Tag</label><input type="text" class="form-input" id="o-tag" placeholder="e.g. Love & Romance"></div>
+            <div class="admin-form-group"><label for="o-start">Start Date</label><input type="date" class="form-input" id="o-start"></div>
+            <div class="admin-form-group"><label for="o-end">End Date</label><input type="date" class="form-input" id="o-end"></div>
+          </div>
+          <input type="hidden" id="o-edit-id" value="">
+          <div style="display:flex;gap:12px;margin-top:20px">
+            <button class="btn btn-gold" onclick="saveOffer()" style="flex:1;justify-content:center">Save Offer Slide</button>
+            <button class="btn btn-outline" onclick="closeOfferModal()" style="justify-content:center">Clear</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th scope="col">Title</th><th scope="col">Discount</th><th scope="col">Start</th><th scope="col">End</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead>
+            <tbody id="admin-offers-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="admin-panel" id="admin-analytics">
+        <div class="admin-page-title">Sales Analytics</div>
+        <div class="admin-page-sub">Visual performance overview of your gift shop</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+          <div class="glass-card" style="padding:24px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:16px">Top Selling Products</h3>
+            <div id="top-products-chart" class="chart-container"></div>
+          </div>
+          <div class="glass-card" style="padding:24px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:16px">Category Performance</h3>
+            <div id="cat-performance-chart" class="chart-container"></div>
+          </div>
+        </div>
+        <div class="glass-card" style="padding:24px;margin-top:24px">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px">Monthly Sales Trend</h3>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:16px">Simulated monthly data</div>
+          <div class="chart-container" id="monthly-chart" style="height:180px"></div>
+        </div>
+      </div>
+
+      <!-- FINANCE -->
+      <div class="admin-panel" id="admin-finance">
+        <div class="admin-page-title">Financial Dashboard</div>
+        <div class="admin-page-sub">Track income, expenses, and profit</div>
+        <div class="finance-grid">
+          <div class="finance-card glass-card">
+            <div class="stat-icon" aria-hidden="true">💵</div>
+            <div class="finance-value finance-income">₹1,24,500</div>
+            <div class="stat-label">Total Income</div>
+            <div class="stat-change stat-up" style="margin-top:6px">↑ 18% this month</div>
+          </div>
+          <div class="finance-card glass-card">
+            <div class="stat-icon" aria-hidden="true">💸</div>
+            <div class="finance-value finance-expense">₹38,200</div>
+            <div class="stat-label">Total Expenses</div>
+            <div class="stat-change stat-down" style="margin-top:6px">↑ 5% from last month</div>
+          </div>
+          <div class="finance-card glass-card">
+            <div class="stat-icon" aria-hidden="true">📈</div>
+            <div class="finance-value finance-profit">₹86,300</div>
+            <div class="stat-label">Net Profit</div>
+            <div class="stat-change stat-up" style="margin-top:6px">↑ 22% growth</div>
+          </div>
+        </div>
+        <div class="glass-card" style="padding:24px">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:16px">Monthly Breakdown</h3>
+          <div class="chart-container" id="finance-chart"></div>
+        </div>
+        <div class="glass-card" style="padding:24px;margin-top:24px">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:16px">Add Expense Entry</h3>
+          <div class="admin-form-grid">
+            <div class="admin-form-group"><label for="exp-cat">Category</label>
+              <select class="admin-select" id="exp-cat"><option>Packaging</option><option>Shipping</option><option>Raw Materials</option><option>Marketing</option><option>Utilities</option></select>
+            </div>
+            <div class="admin-form-group"><label for="exp-amount">Amount (₹)</label><input type="number" class="form-input" id="exp-amount" placeholder="0.00"></div>
+            <div class="admin-form-group"><label for="exp-date">Date</label><input type="date" class="form-input" id="exp-date"></div>
+            <div class="admin-form-group"><label for="exp-note">Note</label><input type="text" class="form-input" id="exp-note" placeholder="Optional note"></div>
+          </div>
+          <button class="btn btn-wine" style="margin-top:16px" onclick="notify('Expense entry saved!','success')">Save Entry</button>
+        </div>
+      </div>
+
+      <!-- REVIEWS ADMIN -->
+      <div class="admin-panel" id="admin-reviews">
+        <div class="admin-page-title">Customer Reviews</div>
+        <div class="admin-page-sub">Monitor and manage customer feedback</div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th scope="col">Name</th><th scope="col">Product</th><th scope="col">Rating</th><th scope="col">Review</th><th scope="col">Date</th><th scope="col">Action</th></tr></thead>
+            <tbody id="admin-reviews-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="admin-panel" id="admin-settings">
+        <div class="admin-page-title">Account Settings</div>
+        <div class="admin-page-sub">Manage your admin credentials securely</div>
+        <div style="max-width:480px">
+          <div class="glass-card" style="padding:32px;margin-bottom:24px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:20px">Change Username</h3>
+            <div class="admin-form-group" style="margin-bottom:14px"><label for="set-username">New Username</label><input type="text" class="form-input" id="set-username" placeholder="Enter new username"></div>
+            <div class="admin-form-group" style="margin-bottom:14px"><label for="set-username-otp">Confirm with OTP</label><input type="text" class="form-input" id="set-username-otp" placeholder="Enter OTP sent to your phone"></div>
+            <button class="btn btn-wine" onclick="notify('Username updated!','success')">Update Username</button>
+          </div>
+          <div class="glass-card" style="padding:32px;margin-bottom:24px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:20px">Change Password</h3>
+            <div class="admin-form-group" style="margin-bottom:14px"><label for="set-pass-current">Current Password</label><input type="password" class="form-input" id="set-pass-current"></div>
+            <div class="admin-form-group" style="margin-bottom:14px"><label for="set-pass-new">New Password</label><input type="password" class="form-input" id="set-pass-new"></div>
+            <div class="admin-form-group" style="margin-bottom:14px"><label for="set-pass-confirm">Confirm Password</label><input type="password" class="form-input" id="set-pass-confirm"></div>
+            <button class="btn btn-wine" onclick="notify('Password updated!','success')">Change Password</button>
+          </div>
+          <div class="glass-card" style="padding:32px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:20px">Update Contact</h3>
+            <div class="admin-form-group" style="margin-bottom:14px"><label for="set-mobile">Mobile Number</label><input type="tel" class="form-input" id="set-mobile" placeholder="+91 00000 00000"></div>
+            <div class="admin-form-group" style="margin-bottom:14px"><label for="set-email">Email</label><input type="email" class="form-input" id="set-email" placeholder="admin@mkgiftshop.com"></div>
+            <button class="btn btn-wine" onclick="notify('Contact details updated!','success')">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <!-- Brand column -->
+    <div class="footer-col footer-brand-col">
+      <div class="footer-logo">
+        <img src="icons/icon-512.png" alt="MK Gift Centre" class="footer-logo-img" width="40" height="40">
+        <span>MK Gift Shop</span>
+      </div>
+      <p class="footer-tagline">Where every gift becomes a cherished memory</p>
+      <p class="footer-about">Curated, premium gift collections for every occasion — handpicked with care and delivered with love across India.</p>
+      <div class="footer-social" aria-label="Follow us on social media">
+        <a href="https://www.instagram.com/mk_gift_centre?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram">📷</a>
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Facebook">📘</a>
+        <a href="https://wa.me/916383204742" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="WhatsApp">💬</a>
+        <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Pinterest">📌</a>
+      </div>
+    </div>
+
+    <!-- Quick links column -->
+    <div class="footer-col">
+      <h4 class="footer-col-title">Quick Links</h4>
+      <a href="#page-home">Home</a>
+      <a href="#page-offerings">Offerings</a>
+      <a href="#page-categories">Categories</a>
+      <a href="#page-products">Products</a>
+      <a href="#page-reviews">Reviews</a>
+      <a href="#page-contact">Contact</a>
+    </div>
+
+    <!-- Policies column -->
+    <div class="footer-col">
+      <h4 class="footer-col-title">Policies</h4>
+      <a href="#" onclick="notify('Coming soon!');return false;">About Us</a>
+      <a href="#" onclick="notify('Coming soon!');return false;">Shipping Policy</a>
+      <a href="#" onclick="notify('Coming soon!');return false;">Return &amp; Refund Policy</a>
+      <a href="#" onclick="notify('Coming soon!');return false;">Privacy Policy</a>
+      <a href="#" onclick="notify('Coming soon!');return false;">Terms &amp; Conditions</a>
+    </div>
+
+    <!-- Contact + Newsletter column -->
+    <div class="footer-col">
+      <h4 class="footer-col-title">Stay in Touch</h4>
+      <p class="footer-contact-line">📞 <a href="tel:+916383204742">+91 63832 04742</a></p>
+      <p class="footer-contact-line">✉️ <a href="mailto:hello@mkgiftshop.com">hello@mkgiftshop.com</a></p>
+      <p class="footer-contact-line">📍 Azath Street, Madurai Rd, Thiruppathur - 630211, Tamil Nadu</p>
+      <p class="footer-contact-line">📷 <a href="https://www.instagram.com/mk_gift_centre?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">@mk_gift_centre</a></p>
+
+      <div class="footer-newsletter">
+        <label for="footer-newsletter-email" class="footer-col-title" style="margin-bottom:8px">Newsletter</label>
+        <p class="footer-newsletter-sub">Get gift ideas &amp; exclusive offers in your inbox.</p>
+        <div class="footer-newsletter-row">
+          <input type="email" id="footer-newsletter-email" class="footer-newsletter-input" placeholder="Your email address" aria-label="Email address for newsletter">
+          <button type="button" class="footer-newsletter-btn" onclick="subscribeNewsletter()">Subscribe</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-payments" aria-label="Accepted payment methods">
+      <span class="footer-payment-icon" title="UPI">📱 UPI</span>
+      <span class="footer-payment-icon" title="Visa/Mastercard">💳 Cards</span>
+      <span class="footer-payment-icon" title="Net Banking">🏦 Net Banking</span>
+      <span class="footer-payment-icon" title="Cash on Delivery">💵 COD</span>
+    </div>
+    <div class="footer-copy">© 2025 MK Gift Shop. All rights reserved. | Made with ❤ for unforgettable moments</div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<button id="wa-btn" onclick="openWhatsApp()" aria-label="Chat on WhatsApp">💬</button>
+<div id="wa-tooltip" aria-hidden="true">Chat with us on WhatsApp</div>
+
+<!-- CART BUTTON -->
+<button id="cart-btn" onclick="toggleCart()" aria-label="View cart">🛒<span id="cart-count" aria-hidden="true">0</span></button>
+
+<!-- CART SIDEBAR -->
+<div id="cart-sidebar" aria-label="Shopping cart" role="dialog" aria-modal="false">
+  <div class="cart-header">
+    <h3>🛒 My Selection</h3>
+    <button class="cart-close" onclick="toggleCart()" aria-label="Close cart">✕</button>
+  </div>
+  <div id="cart-items"></div>
+  <div id="cart-footer" style="display:none">
+    <div class="cart-total">
+      <span>Total</span>
+      <span class="cart-total-price" id="cart-total">₹0</span>
+    </div>
+    <button class="whatsapp-order-btn" onclick="sendWhatsAppOrder()">
+      💬 Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN OVERLAY -->
+<div id="admin-login-overlay" role="dialog" aria-modal="true" aria-label="Admin sign in">
+  <div class="glass-card admin-login-card" style="position:relative">
+    <button class="admin-close" onclick="closeAdminLogin()" aria-label="Close admin login">✕</button>
+    <div class="admin-logo">
+      <img src="icons/icon-512.png" alt="MK Gift Centre" class="admin-logo-img" width="56" height="56">
+      <div class="admin-logo-text">MK</div>
+      <div class="admin-subtitle">Gift Shop Admin</div>
+    </div>
+    <div id="admin-login-step1">
+      <div class="admin-form-title">Sign In to Dashboard</div>
+      <div class="form-group"><label for="admin-user">Username</label><input type="text" class="form-input" id="admin-user" placeholder="admin"></div>
+      <div class="form-group" style="margin-bottom:24px"><label for="admin-pass">Password</label><input type="password" class="form-input" id="admin-pass" placeholder="••••••••"></div>
+      <button class="btn btn-gold" style="width:100%;justify-content:center" onclick="adminLogin()">Continue →</button>
+    </div>
+    <div id="admin-login-step2" style="display:none">
+      <div class="admin-form-title">OTP Verification</div>
+      <p style="font-size:0.82rem;color:var(--text-muted);text-align:center;margin-bottom:20px">A 6-digit OTP has been sent to your registered mobile & email.</p>
+      <div class="form-group" style="margin-bottom:24px"><label for="admin-otp">Enter OTP</label><input type="text" class="form-input" id="admin-otp" placeholder="000000" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:1.2rem" inputmode="numeric"></div>
+      <button class="btn btn-gold" style="width:100%;justify-content:center" onclick="verifyOTP()">Verify & Login</button>
+      <div style="text-align:center;margin-top:12px"><button style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer" onclick="resendOTP()">Resend OTP</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
