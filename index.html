@@ -7,14 +7,17 @@
 <meta name="description" content="MK Gift Shop offers curated, premium gift collections for birthdays, weddings, festivals, and every special occasion. Shop hampers, candles, and more — delivered with love.">
 <meta name="theme-color" content="#0d0d1a">
 
+<!-- App-like install support (Add to Home Screen) -->
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/icon.svg">
+<link rel="icon" href="icons/icon-512.png" type="image/png">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MK Gift Shop">
-
+  
 <meta property="og:title" content="MK Gift Shop – Premium Gifts for Every Moment">
 <meta property="og:description" content="Curated gifts that speak the words your heart can't say.">
 <meta property="og:type" content="website">
@@ -33,32 +36,28 @@
 
 <div id="notification" role="status" aria-live="polite"></div>
 
-<!-- NAV -->
-<nav id="navbar">
-  <div class="nav-logo">
-    MK <span>Gift-Shop</span>
-  </div>
-  <div class="nav-links" id="navLinks">
-    <a href="#page-home" data-page="home">Home</a>
-    <a href="#page-offerings" data-page="offerings">Offers</a>
-    <a href="#page-products" data-page="products" onclick="return goToProducts(event)">Products</a>
-    <a href="#page-reviews" data-page="reviews">Reviews</a>
-    <a href="#page-contact" data-page="contact">Contact</a>
-    <a href="#" onclick="openAdminLogin();return false;" class="nav-admin-link">Admin</a>
-  </div>
-  
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav id="navbar" aria-label="Main navigation">
+  <a class="nav-logo" href="#page-home" onclick="closeMenu()">
+    <img src="icons/icon-512.png" alt="MK Gift Centre" class="nav-logo-img" width="44" height="44">
+    <span class="nav-logo-text">MK Gift Centre</span>
+  </a>
+  <button class="hamburger" onclick="toggleMenu()" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
     <span></span><span></span><span></span>
   </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#page-home" onclick="closeMenu()" class="active" data-page="home">Home</a></li>
+    <li><a href="#page-offerings" onclick="closeMenu()" data-page="offerings">Offerings</a></li>
+    <li><a href="#page-categories" onclick="closeMenu()" data-page="categories">Categories</a></li>
+    <li><a href="#page-products" onclick="closeMenu()" data-page="products">Products</a></li>
+    <li><a href="#page-reviews" onclick="closeMenu()" data-page="reviews">Reviews</a></li>
+    <li><a href="#page-contact" onclick="closeMenu()" data-page="contact">Contact</a></li>
+    <li><a href="#" onclick="openAdminLogin();return false;" class="nav-admin-btn">⚙ Admin</a></li>
+  </ul>
 </nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#page-home" data-page="home" onclick="closeMenu()">Home</a>
-  <a href="#page-offerings" data-page="offerings" onclick="closeMenu()">Offers</a>
-  <a href="#page-products" data-page="products" onclick="closeMenu();return goToProducts(event)">Products</a>
-  <a href="#page-reviews" data-page="reviews" onclick="closeMenu()">Reviews</a>
-  <a href="#page-contact" data-page="contact" onclick="closeMenu()">Contact</a>
-  <a href="#" onclick="openAdminLogin();closeMenu();return false;" class="nav-admin-link">Admin Panel</a>
-</div>
+
 
 <main id="main-content">
 
