@@ -17,10 +17,10 @@ let products = [
 ];
 
 let offers = [
-  { id:1, title:'Valentine\'s Special', desc:'Up to 30% off on all Love & Romance collections. Express your feelings beautifully.', discount:30, tag:'Love & Romance', start:'2025-02-01', end:'2026-12-14' },
-  { id:2, title:'Summer Gifting Fiesta', desc:'Beat the heat with our cool combo packs — free gift wrapping on orders above ₹1000.', discount:20, tag:'All Categories', start:'2025-06-01', end:'2026-08-31' },
-  { id:3, title:'Diwali Grand Sale', desc:'Celebrate the festival of lights with exclusive hampers at unbeatable prices.', discount:25, tag:'Festival', start:'2025-10-15', end:'2026-10-25' },
-  { id:4, title:'Friendship Week Bonanza', desc:'Gift your best friend something special — flat 15% off on Friendship gifts.', discount:15, tag:'Friendship', start:'2025-08-01', end:'2026-08-07' },
+  { id:1, title:'Valentine\'s Special', desc:'Up to 30% off on all Love & Romance collections. Express your feelings beautifully.', discount:30, tag:'Love & Romance', start:'2025-02-01', end:'2025-02-14' },
+  { id:2, title:'Summer Gifting Fiesta', desc:'Beat the heat with our cool combo packs — free gift wrapping on orders above ₹1000.', discount:20, tag:'All Categories', start:'2025-06-01', end:'2025-08-31' },
+  { id:3, title:'Diwali Grand Sale', desc:'Celebrate the festival of lights with exclusive hampers at unbeatable prices.', discount:25, tag:'Festival', start:'2025-10-15', end:'2025-10-25' },
+  { id:4, title:'Friendship Week Bonanza', desc:'Gift your best friend something special — flat 15% off on Friendship gifts.', discount:15, tag:'Friendship', start:'2025-08-01', end:'2025-08-07' },
 ];
 
 let reviews = [
@@ -31,124 +31,118 @@ let reviews = [
 ];
 
 let categories = [
-  { name:'Birthday', icon:'🎂' },
-  { name:'Love & Romance', icon:'💝' },
-  { name:'Wedding', icon:'💍' },
-  { name:'Friendship', icon:'🤝' },
-  { name:'Baby Shower', icon:'🍼' },
-  { name:'Festival', icon:'🪔' },
-  { name:'Corporate', icon:'💼' },
-  { name:'Kids', icon:'🌈' },
+  { name:'Birthday', icon:'🎂', quote:'Make their day extraordinary', count:24 },
+  { name:'Love & Romance', icon:'💝', quote:'A small gift, a big emotion', count:18 },
+  { name:'Wedding', icon:'💍', quote:'Begin forever beautifully', count:15 },
+  { name:'Friendship', icon:'🤝', quote:'Friends who gift, stay together', count:12 },
+  { name:'Baby Shower', icon:'🍼', quote:'Celebrate the little miracle', count:9 },
+  { name:'Festival', icon:'🪔', quote:'Light up the celebration', count:20 },
+  { name:'Corporate', icon:'💼', quote:'Impress with elegance', count:11 },
+  { name:'Kids', icon:'🌈', quote:'Joy in every colour', count:16 },
 ];
 
 let cart = [];
 let nextId = products.length + 1;
 let isLoggedIn = false;
 
+/* Feature-detect: skip decorative effects on touch devices or for users who prefer reduced motion */
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const WHATSAPP_NUMBER = '916383204742';
 
 /* ==============================================================
-   NAVBAR HEIGHT / SCROLL STYLE
+   LIQUID BACKGROUND CANVAS
    ============================================================== */
-function setNavbarHeightVar() {
-  const nav = document.getElementById('navbar');
-  if (nav) document.documentElement.style.setProperty('--navbar-h', nav.offsetHeight + 'px');
-}
-// Set immediately on script execution (don't wait for DOMContentLoaded) so the
-// mobile menu's `top` offset is correct on first paint, not just after resize.
-setNavbarHeightVar();
-window.addEventListener('resize', setNavbarHeightVar);
-window.addEventListener('orientationchange', setNavbarHeightVar);
-// Web fonts loading late can change navbar height (text reflow) after first paint —
-// recalc once fonts are ready so the mobile menu doesn't sit at a stale offset.
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(setNavbarHeightVar);
-}
-window.addEventListener('scroll', () => {
-  const nav = document.getElementById('navbar');
-  if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
-});
+(function initCanvas() {
+  if (prefersReducedMotion) return; // skip animated background entirely
+  const canvas = document.getElementById('liquid-bg');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, blobs;
 
-/* ==============================================================
-   MOBILE MENU (single source of truth — no duplicate handlers)
-   ============================================================== */
-function toggleMenu() {
-  setNavbarHeightVar();
-  const menu = document.getElementById('mobileMenu');
-  const btn = document.getElementById('hamburger');
-  if (!menu || !btn) return;
-  const isOpen = menu.classList.toggle('open');
-  btn.setAttribute('aria-expanded', String(isOpen));
-  document.body.classList.toggle('nav-open', isOpen);
-}
-function closeMenu() {
-  const menu = document.getElementById('mobileMenu');
-  const btn = document.getElementById('hamburger');
-  if (menu) menu.classList.remove('open');
-  if (btn) btn.setAttribute('aria-expanded', 'false');
-  document.body.classList.remove('nav-open');
-}
-
-function initMobileMenu() {
-  const hamburger = document.getElementById('hamburger');
-  const menu = document.getElementById('mobileMenu');
-  if (!hamburger || !menu) {
-    console.error('[MK Gift Shop] Mobile menu init failed — #hamburger or #mobileMenu not found in the DOM.');
-    return;
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
   }
 
-  hamburger.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleMenu();
-  });
+  function makeBlob() {
+    return {
+      x: Math.random() * W, y: Math.random() * H,
+      r: 180 + Math.random() * 220,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      hue: [[123,30,58],[61,31,110],[230,18,122]][Math.floor(Math.random() * 3)],
+      phase: Math.random() * Math.PI * 2,
+    };
+  }
 
-  // Close the menu whenever any link inside it is tapped (after any
-  // business-logic onclick, e.g. goToProducts/openAdminLogin, has run).
-  menu.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', closeMenu);
-  });
+  function init() { resize(); blobs = Array.from({length:5}, makeBlob); }
 
-  // Tap/click anywhere outside the open menu closes it.
-  document.addEventListener('click', (e) => {
-    if (!menu.classList.contains('open')) return;
-    if (menu.contains(e.target) || hamburger.contains(e.target)) return;
-    closeMenu();
-  });
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const t = Date.now() * 0.0008;
+    blobs.forEach(b => {
+      b.x += b.vx; b.y += b.vy;
+      if (b.x < -b.r) b.x = W + b.r;
+      if (b.x > W + b.r) b.x = -b.r;
+      if (b.y < -b.r) b.y = H + b.r;
+      if (b.y > H + b.r) b.y = -b.r;
+      const pulse = 1 + 0.15 * Math.sin(t + b.phase);
+      const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r * pulse);
+      const [r,g,bv] = b.hue;
+      grad.addColorStop(0, `rgba(${r},${g},${bv},0.18)`);
+      grad.addColorStop(1, `rgba(${r},${g},${bv},0)`);
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r * pulse, 0, Math.PI * 2);
+      ctx.fillStyle = grad; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMenu();
-  });
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initMobileMenu);
-} else {
-  initMobileMenu();
-}
-
+  window.addEventListener('resize', resize);
+  init(); draw();
+})();
 
 /* ==============================================================
-   SECTION SCROLLING
+   PARTICLES
+   ============================================================== */
+(function spawnParticles() {
+  if (prefersReducedMotion) return;
+  // Fewer particles on small screens to save battery/CPU
+  const count = window.innerWidth < 768 ? 12 : 25;
+  const colors = ['rgba(201,168,76,0.6)','rgba(192,69,107,0.5)','rgba(106,58,173,0.5)','rgba(201,168,76,0.4)'];
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random() * 4;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${12+Math.random()*18}s;
+      animation-delay:${-Math.random()*20}s;
+    `;
+    frag.appendChild(p);
+  }
+  document.body.appendChild(frag);
+})();
+
+/* ==============================================================
+   SECTION SCROLLING (single continuous page)
+   All content sections are visible at once; this just smooth-scrolls
+   to the right one and closes the mobile menu if open.
    ============================================================== */
 function scrollToSection(name) {
   const el = document.getElementById('page-' + name);
   if (el) el.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
   closeMenu();
 }
-// "Products" nav link both navigates to the section and clears any active category filter.
-function goToProducts(event) {
-  if (event) event.preventDefault();
-  filterByCategory('All');
-  scrollToSection('products');
-  return false;
-}
 
+// Highlights the nav link matching whichever section is currently in view.
 const sectionNavObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
     const name = entry.target.id.replace('page-', '');
-    document.querySelectorAll('a[data-page]').forEach(a => {
+    document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
       a.classList.toggle('active', a.dataset.page === name);
     });
   });
@@ -161,6 +155,40 @@ function initScrollSpy() {
   });
 }
 
+function setNavbarHeightVar() {
+  const nav = document.getElementById('navbar');
+  if (nav) document.documentElement.style.setProperty('--navbar-h', nav.offsetHeight + 'px');
+}
+
+function toggleMenu() {
+  setNavbarHeightVar();
+  const links = document.getElementById('nav-links');
+  const btn = document.getElementById('hamburger');
+  const isOpen = links.classList.toggle('open');
+  btn.setAttribute('aria-expanded', String(isOpen));
+  document.body.classList.toggle('nav-open', isOpen);
+}
+
+function closeMenu() {
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('nav-open');
+}
+
+// Dismiss the mobile menu on outside tap/click or Escape, like any standard app menu.
+document.addEventListener('click', (e) => {
+  const links = document.getElementById('nav-links');
+  const hamburger = document.getElementById('hamburger');
+  if (!links || !links.classList.contains('open')) return;
+  if (links.contains(e.target) || hamburger.contains(e.target)) return;
+  closeMenu();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeMenu();
+});
+
+window.addEventListener('resize', setNavbarHeightVar);
+
 /* ==============================================================
    REVEAL ANIMATIONS
    ============================================================== */
@@ -171,6 +199,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 function observeReveals() {
   document.querySelectorAll('.reveal, .reveal-left').forEach(el => revealObserver.observe(el));
 }
+setTimeout(observeReveals, 100);
 
 /* ==============================================================
    HOME REVIEWS
@@ -203,6 +232,7 @@ function isOfferActive(o) {
   return end >= now;
 }
 
+// Rotating background tints for banners so consecutive slides don't look identical.
 const OFFER_BANNER_GRADIENTS = [
   'linear-gradient(135deg, rgba(123,30,58,0.55), rgba(61,31,110,0.55))',
   'linear-gradient(135deg, rgba(61,31,110,0.55), rgba(201,168,76,0.35))',
@@ -236,9 +266,12 @@ function offerBannerHTML(o, gradientIndex) {
   `;
 }
 
+// Groups offers two-per-slide; if there's an odd one out, it gets its own slide.
 function chunkOffersIntoPairs(list) {
   const pairs = [];
-  for (let i = 0; i < list.length; i += 2) pairs.push(list.slice(i, i + 2));
+  for (let i = 0; i < list.length; i += 2) {
+    pairs.push(list.slice(i, i + 2));
+  }
   return pairs;
 }
 
@@ -275,7 +308,7 @@ function goToOfferSlide(index) {
   const dotEls = document.querySelectorAll('#offer-slider-dots .offer-slider-dot');
   if (!slideEls.length) return;
   const total = slideEls.length;
-  const next = ((index % total) + total) % total;
+  const next = ((index % total) + total) % total; // wrap both directions
 
   slideEls.forEach((el, i) => {
     if (i === offerSlideIndex && i !== next) {
@@ -303,22 +336,29 @@ function prevOfferSlide() { goToOfferSlide(offerSlideIndex - 1); }
 
 function startOfferAutoplay() {
   stopOfferAutoplay();
-  if (prefersReducedMotion) return;
+  if (prefersReducedMotion) return; // don't force motion on users who've asked to avoid it
   const slideCount = document.querySelectorAll('#offer-slider-track .offer-slide').length;
   if (slideCount <= 1) return;
   offerSlideTimer = setInterval(nextOfferSlide, 5000);
 }
+
 function stopOfferAutoplay() {
   if (offerSlideTimer) { clearInterval(offerSlideTimer); offerSlideTimer = null; }
 }
-function restartOfferAutoplay() { stopOfferAutoplay(); startOfferAutoplay(); }
 
+function restartOfferAutoplay() {
+  stopOfferAutoplay();
+  startOfferAutoplay();
+}
+
+// Wire up arrows once (the buttons are static, not re-rendered each time).
 function bindOfferSliderControls() {
   const prevBtn = document.getElementById('offer-prev');
   const nextBtn = document.getElementById('offer-next');
   const slider = document.getElementById('offer-slider');
   if (prevBtn) prevBtn.addEventListener('click', prevOfferSlide);
   if (nextBtn) nextBtn.addEventListener('click', nextOfferSlide);
+  // Pause autoplay while the user is interacting with the slider, resume after.
   if (slider) {
     slider.addEventListener('mouseenter', stopOfferAutoplay);
     slider.addEventListener('mouseleave', startOfferAutoplay);
@@ -376,7 +416,7 @@ function filterByCategory(cat) {
 function renderBestSellers() {
   const container = document.getElementById('best-sellers');
   const bs = products.filter(p => p.bestseller);
-  container.innerHTML = bs.map(p => productCardHTML(p)).join('');
+  container.innerHTML = bs.map(p => productCardHTML(p, true)).join('');
 }
 
 function renderProductGrid(list) {
@@ -386,14 +426,15 @@ function renderProductGrid(list) {
     : '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);font-style:italic">No products match your filters.</div>';
 }
 
-function productCardHTML(p) {
+function productCardHTML(p, compact=false) {
   const badgeMap = { bestseller:'badge-bestseller', discount:'badge-discount', new:'badge-new', combo:'badge-discount' };
   const stockClass = { in:'in-stock', out:'out-stock', sold:'sold-out' }[p.stock];
   const stockLabel = { in:'In Stock', out:'Out of Stock', sold:'Sold Out' }[p.stock];
+  const w = compact ? 'min-width:180px' : '';
   return `
-    <div class="glass-card product-card">
+    <div class="glass-card product-card" style="${w}">
       <div class="product-img-wrap">
-        <div class="product-img" aria-hidden="true">${p.image ? `<img src="${p.image}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">` : (p.icon || '🎁')}</div>
+        <div class="product-img" aria-hidden="true">${p.icon || '🎁'}</div>
         ${p.badge ? `<div class="product-badge ${badgeMap[p.badge]||'badge-new'}">${p.badge==='bestseller'?'⭐ Best':p.badge==='discount'?`${p.discount}% OFF`:p.badge==='combo'?'Combo':'New'}</div>` : ''}
       </div>
       <div class="product-code"># ${escapeHTML(p.code)}</div>
@@ -443,7 +484,7 @@ function updateCartUI() {
   }
   container.innerHTML = cart.map(c => `
     <div class="cart-item">
-      <div class="cart-item-icon" aria-hidden="true">${c.image ? `<img src="${c.image}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">` : (c.icon||'🎁')}</div>
+      <div class="cart-item-icon" aria-hidden="true">${c.icon||'🎁'}</div>
       <div>
         <div class="cart-item-name">${escapeHTML(c.name)}</div>
         <div class="cart-item-code">${escapeHTML(c.code)} × ${c.qty||1}</div>
@@ -457,8 +498,10 @@ function updateCartUI() {
   document.getElementById('cart-footer').style.display = 'block';
 }
 
+const WHATSAPP_NUMBER = '916383204742';
+
 function sendWhatsAppOrder() {
-  if (!cart.length) { notify('Your selection is empty.', 'error'); return; }
+  if (!cart.length) return;
   const lines = cart.map(c => `• ${c.name} (${c.code}) × ${c.qty||1} — ₹${(c.price*(c.qty||1)).toLocaleString('en-IN')}`).join('\n');
   const total = cart.reduce((s,c) => s + c.price*(c.qty||1), 0);
   const msg = encodeURIComponent(`Hi MK Gift Shop! 👋\n\nI'd like to order the following:\n\n${lines}\n\nTotal: ₹${total.toLocaleString('en-IN')}\n\nPlease confirm availability and delivery details. Thank you!`);
@@ -497,7 +540,6 @@ function submitReview() {
   document.getElementById('rev-product').value = '';
   document.getElementById('rev-text').value = '';
   setRating(0);
-  currentRatingVal = 0;
   renderReviews();
   notify('Thank you for your review!', 'success');
 }
@@ -536,22 +578,11 @@ function subscribeNewsletter() {
 
 /* ==============================================================
    ADMIN AUTH
-   Note: this is a client-side demo gate only (credentials live in this
-   public file and the "admin" DOM is just hidden, not access-controlled).
-   For a real deployment, authenticate against a server and gate the
-   underlying data there — do not treat this as real security.
    ============================================================== */
 const ADMIN_CREDS = { user: 'admin', pass: 'mk2025', otp: '123456' };
 
 function openAdminLogin() { document.getElementById('admin-login-overlay').classList.add('active'); }
-function closeAdminLogin() {
-  document.getElementById('admin-login-overlay').classList.remove('active');
-  document.getElementById('admin-login-step1').style.display = 'block';
-  document.getElementById('admin-login-step2').style.display = 'none';
-  document.getElementById('admin-user').value = '';
-  document.getElementById('admin-pass').value = '';
-  document.getElementById('admin-otp').value = '';
-}
+function closeAdminLogin() { document.getElementById('admin-login-overlay').classList.remove('active'); }
 
 function adminLogin() {
   const u = document.getElementById('admin-user').value;
@@ -569,7 +600,7 @@ function verifyOTP() {
   const otp = document.getElementById('admin-otp').value;
   if (otp === ADMIN_CREDS.otp) {
     isLoggedIn = true;
-    document.getElementById('admin-login-overlay').classList.remove('active');
+    closeAdminLogin();
     document.getElementById('admin-login-step1').style.display = 'block';
     document.getElementById('admin-login-step2').style.display = 'none';
     document.getElementById('admin-user').value = '';
@@ -621,7 +652,7 @@ function updateAdminStats() {
   document.getElementById('stock-alerts').innerHTML = alerts.length
     ? alerts.map(p => `
         <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
-          <span style="display:inline-flex" aria-hidden="true">${productThumbHTML(p, 26)}</span>
+          <span style="font-size:1.3rem" aria-hidden="true">${p.icon||'🎁'}</span>
           <div><div style="font-size:0.88rem;font-weight:600">${escapeHTML(p.name)}</div><div style="font-size:0.72rem;color:var(--text-muted)">${escapeHTML(p.code)}</div></div>
           <span class="stock-status ${p.stock==='out'?'out-stock':'sold-out'}" style="margin-left:auto">${p.stock==='out'?'Out of Stock':'Sold Out'}</span>
         </div>`)
@@ -637,7 +668,7 @@ function renderAdminProducts() {
   tbody.innerHTML = products.map(p => `
     <tr>
       <td><code style="color:var(--gold);font-size:0.85rem">${escapeHTML(p.code)}</code></td>
-      <td><span style="display:inline-flex;align-items:center;margin-right:8px;vertical-align:middle">${productThumbHTML(p, 28)}</span>${escapeHTML(p.name)}</td>
+      <td><span style="font-size:1.1rem;margin-right:8px" aria-hidden="true">${p.icon||'🎁'}</span>${escapeHTML(p.name)}</td>
       <td>${escapeHTML(p.cat)}</td>
       <td style="color:var(--gold)">₹${p.price.toLocaleString('en-IN')}</td>
       <td><span class="stock-status ${p.stock==='in'?'in-stock':p.stock==='out'?'out-stock':'sold-out'}">${p.stock==='in'?'In Stock':p.stock==='out'?'Out of Stock':'Sold Out'}</span></td>
@@ -655,40 +686,14 @@ function generateCode(cat) {
   return prefix + num;
 }
 
-const MAX_PRODUCT_IMAGE_MB = 2;
-function handleProductImageUpload(event) {
-  const file = event.target.files && event.target.files[0];
-  const preview = document.getElementById('p-image-preview');
-  if (!file) return;
-  if (!file.type.startsWith('image/')) {
-    notify('Please choose an image file.', 'error');
-    event.target.value = '';
-    return;
-  }
-  if (file.size > MAX_PRODUCT_IMAGE_MB * 1024 * 1024) {
-    notify(`Image must be smaller than ${MAX_PRODUCT_IMAGE_MB}MB.`, 'error');
-    event.target.value = '';
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = () => {
-    document.getElementById('p-image-data').value = reader.result;
-    preview.innerHTML = `<img src="${reader.result}" alt="" style="width:100%;height:100%;object-fit:cover">`;
-  };
-  reader.onerror = () => notify('Could not read that image, please try another file.', 'error');
-  reader.readAsDataURL(file);
-}
-
-function productThumbHTML(p, size) {
-  return p.image
-    ? `<img src="${p.image}" alt="" style="width:${size}px;height:${size}px;border-radius:6px;object-fit:cover;flex-shrink:0" aria-hidden="true">`
-    : `<span style="font-size:${size*0.75}px" aria-hidden="true">${p.icon || '🎁'}</span>`;
-}
-
+// Bound once at load time instead of being re-attached every time the modal opens
+// (the original code added a fresh 'change' listener on every openProductModal call,
+// which stacked duplicate listeners and fired generateCode() multiple times per change).
 function bindProductCategoryPreview() {
   const catSelect = document.getElementById('p-cat');
   if (!catSelect) return;
   catSelect.addEventListener('change', function() {
+    // Only auto-update the code preview when adding a new product, not when editing one.
     const editing = document.getElementById('p-edit-id').value;
     if (!editing) {
       document.getElementById('p-code-preview').textContent = generateCode(this.value);
@@ -698,9 +703,6 @@ function bindProductCategoryPreview() {
 
 function openProductModal(id) {
   switchAdmin('add');
-  const imagePreview = document.getElementById('p-image-preview');
-  const imageInput = document.getElementById('p-image');
-  const imageData = document.getElementById('p-image-data');
   if (id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
@@ -709,11 +711,7 @@ function openProductModal(id) {
     document.getElementById('p-price').value = p.price;
     document.getElementById('p-cat').value = p.cat;
     document.getElementById('p-stock').value = p.stock;
-    imageData.value = p.image || '';
-    imageInput.value = '';
-    imagePreview.innerHTML = p.image
-      ? `<img src="${p.image}" alt="" style="width:100%;height:100%;object-fit:cover">`
-      : (p.icon || '🎁');
+    document.getElementById('p-icon').value = p.icon || '';
     document.getElementById('p-discount').value = p.discount || 0;
     document.getElementById('p-original').value = p.original || '';
     document.getElementById('p-badge').value = p.badge || '';
@@ -726,9 +724,7 @@ function openProductModal(id) {
     document.getElementById('p-price').value = '';
     document.getElementById('p-cat').value = 'Birthday';
     document.getElementById('p-stock').value = 'in';
-    imageInput.value = '';
-    imageData.value = '';
-    imagePreview.innerHTML = '🎁';
+    document.getElementById('p-icon').value = '🎁';
     document.getElementById('p-discount').value = 0;
     document.getElementById('p-original').value = '';
     document.getElementById('p-badge').value = '';
@@ -745,7 +741,7 @@ function saveProduct() {
   const price = parseInt(document.getElementById('p-price').value);
   const cat = document.getElementById('p-cat').value;
   const stock = document.getElementById('p-stock').value;
-  const image = document.getElementById('p-image-data').value || '';
+  const icon = document.getElementById('p-icon').value || '🎁';
   const discount = parseInt(document.getElementById('p-discount').value) || 0;
   const original = parseInt(document.getElementById('p-original').value) || price;
   const badge = document.getElementById('p-badge').value;
@@ -754,17 +750,16 @@ function saveProduct() {
   const editId = Number(document.getElementById('p-edit-id').value) || null;
   if (editId) {
     const idx = products.findIndex(p => p.id === editId);
-    if (idx > -1) Object.assign(products[idx], { name, price, cat, stock, image, discount, original, badge, bestseller });
+    if (idx > -1) Object.assign(products[idx], { name, price, cat, stock, icon, discount, original, badge, bestseller });
     notify('Product updated!', 'success');
   } else {
     const code = document.getElementById('p-code-preview').textContent;
-    products.push({ id: nextId++, code, name, price, cat, stock, image, icon:'🎁', discount, original, badge, bestseller });
+    products.push({ id: nextId++, code, name, price, cat, stock, icon, discount, original, badge, bestseller });
     notify('Product added!', 'success');
   }
   closeProductModal();
   renderAdminProducts();
   updateAdminStats();
-  renderProducts();
 }
 
 function deleteProduct(id) {
@@ -772,7 +767,6 @@ function deleteProduct(id) {
   products = products.filter(p => p.id !== id);
   renderAdminProducts();
   updateAdminStats();
-  renderProducts();
   notify('Product deleted.', 'success');
 }
 
@@ -842,13 +836,12 @@ function saveOffer() {
     if (idx > -1) Object.assign(offers[idx], { title, desc, discount, tag, start, end });
     notify('Offer updated!', 'success');
   } else {
-    offers.push({ id: Date.now(), title, desc, discount, tag, start, end });
+    offers.push({ id: offers.length + 1, title, desc, discount, tag, start, end });
     notify('Offer added!', 'success');
   }
   closeOfferModal();
   renderAdminOffers();
   updateAdminStats();
-  renderOffers();
 }
 
 function deleteOffer(id) {
@@ -856,7 +849,6 @@ function deleteOffer(id) {
   offers = offers.filter(o => o.id !== id);
   renderAdminOffers();
   updateAdminStats();
-  renderOffers();
   notify('Offer deleted.', 'success');
 }
 
@@ -882,7 +874,6 @@ function deleteReview(i) {
   reviews.splice(i, 1);
   renderAdminReviews();
   updateAdminStats();
-  renderReviews();
   notify('Review deleted.', 'success');
 }
 
@@ -962,6 +953,8 @@ function notify(msg, type='') {
   const el = document.getElementById('notification');
   el.textContent = (type==='success'?'✓ ':type==='error'?'✕ ':'') + msg;
   el.className = 'show' + (type ? ' '+type : '');
+  el.setAttribute('role', 'status');
+  el.setAttribute('aria-live', 'polite');
   clearTimeout(el._t);
   el._t = setTimeout(() => { el.className = ''; }, 3500);
 }
@@ -969,11 +962,13 @@ function notify(msg, type='') {
 /* ==============================================================
    UTILITIES
    ============================================================== */
+// Minimal HTML escaping for user-supplied or data-driven text injected via innerHTML.
 function escapeHTML(str) {
   return String(str ?? '').replace(/[&<>"']/g, ch => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[ch]));
 }
+// For values placed inside an HTML attribute within a template string (e.g. onclick="...('value')").
 function escapeAttr(str) {
   return String(str ?? '').replace(/['\\]/g, ch => '\\' + ch);
 }
@@ -992,8 +987,8 @@ window.addEventListener('DOMContentLoaded', () => {
   bindProductCategoryPreview();
   bindOfferSliderControls();
   initScrollSpy();
-  setTimeout(observeReveals, 100);
 
+  // Animate hero elements in (skipped for reduced-motion users)
   if (!prefersReducedMotion) {
     setTimeout(() => {
       document.querySelectorAll('.hero-content > *').forEach((el, i) => {
@@ -1013,8 +1008,8 @@ window.addEventListener('DOMContentLoaded', () => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js').catch(() => {
-      // Fails silently on file:// or unsupported browsers — site still works,
-      // it just won't be available offline.
+      // Registration can fail on file:// or unsupported browsers — fine to ignore,
+      // the site still works normally, it just won't cache for offline use.
     });
   });
 }
